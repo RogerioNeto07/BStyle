@@ -13,6 +13,8 @@ O projeto foi pensado para suprir duas necessidades da CF Style:
 <img width="1404" height="1109" alt="Modelo Lógico - CFStyle (1)" src="https://github.com/user-attachments/assets/b7c54762-9c9d-41ef-803c-232b2e53b4e2" />
 
 ## Endpoints:
+API disponível em: http://localhost:8080
+
 ### Produtos:
 | Método   | Endpoint                  | Descrição                                            |
 | -------- | ------------------------- | ---------------------------------------------------- |
@@ -82,3 +84,8 @@ O projeto foi pensado para suprir duas necessidades da CF Style:
 | `GET`  | `/faturamento?periodo=2025-11` | Retorna faturamento filtrado por mês/ano                                    |
 | `GET`  | `/faturamento/detalhado`       | Faturamento diário ou por tipo de produto  |
 
+## Executando com Docker
+Certifique-se de ter Docker e Docker Compose instalados.
+Para construir e subir a imagem do projeto rode o comando:
+```sh
+docker compose up -d --build
