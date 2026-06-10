@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 
 import rogerio.n.escolar.edu.br.Catalogo.CFStyle.dto.produto.ProdutoCreateDTO;
 import rogerio.n.escolar.edu.br.Catalogo.CFStyle.dto.produto.ProdutoResponseDTO;
+import rogerio.n.escolar.edu.br.Catalogo.CFStyle.models.Usuario;
 import rogerio.n.escolar.edu.br.Catalogo.CFStyle.services.ProdutoService;
 
 @RestController
@@ -27,7 +29,6 @@ public class ProdutoController {
 
     @Autowired
     private ProdutoService produtoService;
-
 
     // -----------------------------
     // LISTAR TODOS
@@ -50,13 +51,14 @@ public class ProdutoController {
     }
 
     // -----------------------------
-    // CRIAR PRODUTO
+    // CRIAR PRODUTO (VINCULADO AO USUÁRIO LOGADO)
     // -----------------------------
     @PostMapping
-    @Operation(summary = "Cria um produto")
+    @Operation(summary = "Cria um produto associando automaticamente ao vendedor logado")
     @ResponseStatus(HttpStatus.CREATED)
-    public ProdutoResponseDTO criar(@RequestBody ProdutoCreateDTO dto) {
-        return produtoService.criar(dto);
+    public ProdutoResponseDTO criar(@RequestBody ProdutoCreateDTO dto, 
+                                    @AuthenticationPrincipal Usuario vendedorLogado) {
+        return produtoService.criarProduto(dto, vendedorLogado);
     }
 
     // -----------------------------
@@ -80,7 +82,6 @@ public class ProdutoController {
         produtoService.deletar(id);
     }
 
-
     // -----------------------------
     // BUSCAR POR TIPO
     // -----------------------------
@@ -100,5 +101,14 @@ public class ProdutoController {
     public List<ProdutoResponseDTO> listarPorTag(@PathVariable Long tagId) {
         return produtoService.listarPorTag(tagId);
     }
-}
 
+    // -----------------------------
+    // NOVO: FILTRAR POR DOAÇÕES (PREÇO == 0)
+    // -----------------------------
+    @GetMapping("/doacoes")
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "Lista apenas desapegos destinados a doação (preço igual a zero)")
+    public List<ProdutoResponseDTO> listarDoacoes() {
+        return produtoService.listarDoacoes();
+    }
+}

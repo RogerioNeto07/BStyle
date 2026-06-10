@@ -3,7 +3,9 @@ package rogerio.n.escolar.edu.br.Catalogo.CFStyle.models;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -26,9 +28,9 @@ public class Produto {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // @ManyToOne
-    // @JoinColumn(name = "usuario_id")
-    // private Usuario usuario;
+    @ManyToOne
+    @JoinColumn(name = "vendedor_id", nullable = false)
+    private Usuario vendedor;
 
     @ManyToOne
     @JoinColumn(name = "tipo_id")
@@ -56,8 +58,10 @@ public class Produto {
     private int quantidade;
     private boolean ativo = true;
 
-    @Column
-    private String fotos;
+    @ElementCollection
+    @CollectionTable(name = "produto_fotos", joinColumns = @JoinColumn(name = "produto_id"))
+    @Column(name = "foto_url")
+    private List<String> fotos;
 
     @Column
     private String opcoes;

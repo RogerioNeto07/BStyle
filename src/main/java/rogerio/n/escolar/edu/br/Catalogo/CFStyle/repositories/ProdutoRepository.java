@@ -15,4 +15,6 @@ public interface ProdutoRepository extends JpaRepository<Produto, Long> {
 
     @Query("SELECT p FROM Produto p JOIN p.tags t WHERE t.id = :tagId")
     List<Produto> findByTagId(@Param("tagId") Long tagId);
+
+    List<Produto> findByPreco(Double preco);
 }
