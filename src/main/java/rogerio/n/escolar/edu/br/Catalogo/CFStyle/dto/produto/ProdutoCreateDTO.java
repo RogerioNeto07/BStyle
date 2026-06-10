@@ -1,30 +1,13 @@
 package rogerio.n.escolar.edu.br.Catalogo.CFStyle.dto.produto;
-
 import java.util.List;
 
-import jakarta.validation.constraints.NotNull;
-import lombok.Data;
-
-@Data
-public class ProdutoCreateDTO {
-    // private long usuarioId;
-
-    private long tipoId;
-
-    @NotNull
-    private String nome;
-
-    @NotNull
-    private String descricao;
-
-    @NotNull
-    private Double preco;
-
-    @NotNull
-    private int quantidade;
-
-    private List<Long> coresIds;
-    private List<Long> tagsIds;
-    private String fotos;
-    private String opcoes;
-}
+public record ProdutoCreateDTO(
+    String nome,
+    String descricao,
+    Double preco,
+    int quantidade,
+    Long tipoId,
+    List<Long> coresIds,
+    List<Long> tagsIds,
+    List<String> fotos
+) {}

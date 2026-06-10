@@ -22,11 +22,42 @@ public class Usuario implements UserDetails {
     @Column(nullable = false)
     private String senha;
 
+    @Column(nullable = false)
+    private String nome;
+
+    @Column(nullable = false)
+    private String telefone;
+
+    private String cidade;
+    private String estado;
+    private String rua;
+    private String numero;
+
     public Long getId() { return id; }
+    
     public String getLogin() { return login; }
     public void setLogin(String login) { this.login = login; }
+    
     public String getSenha() { return senha; }
     public void setSenha(String senha) { this.senha = senha; }
+
+    public String getNome() { return nome; }
+    public void setNome(String nome) { this.nome = nome; }
+
+    public String getTelefone() { return telefone; }
+    public void setTelefone(String telefone) { this.telefone = telefone; }
+
+    public String getCidade() { return cidade; }
+    public void setCidade(String cidade) { this.cidade = cidade; }
+
+    public String getEstado() { return estado; }
+    public void setEstado(String estado) { this.estado = estado; }
+
+    public String getRua() { return rua; }
+    public void setRua(String rua) { this.rua = rua; }
+
+    public String getNumero() { return numero; }
+    public void setNumero(String numero) { this.numero = numero; }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

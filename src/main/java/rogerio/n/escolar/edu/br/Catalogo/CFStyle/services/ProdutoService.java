@@ -10,6 +10,7 @@ import rogerio.n.escolar.edu.br.Catalogo.CFStyle.dto.produto.ProdutoResponseDTO;
 import rogerio.n.escolar.edu.br.Catalogo.CFStyle.models.Cor;
 import rogerio.n.escolar.edu.br.Catalogo.CFStyle.models.Produto;
 import rogerio.n.escolar.edu.br.Catalogo.CFStyle.models.Tag;
+import rogerio.n.escolar.edu.br.Catalogo.CFStyle.models.Usuario;
 import rogerio.n.escolar.edu.br.Catalogo.CFStyle.repositories.CorRepository;
 import rogerio.n.escolar.edu.br.Catalogo.CFStyle.repositories.ProdutoRepository;
 import rogerio.n.escolar.edu.br.Catalogo.CFStyle.repositories.TagRepository;
@@ -30,9 +31,6 @@ public class ProdutoService {
     @Autowired
     private CorRepository corRepository;
 
-    // -----------------------------
-    // LISTAR TODOS
-    // -----------------------------
     public List<ProdutoResponseDTO> listar() {
         return produtoRepository.findAll()
                 .stream()
@@ -40,35 +38,30 @@ public class ProdutoService {
                 .toList();
     }
 
-    // -----------------------------
-    // BUSCAR POR ID
-    // -----------------------------
     public ProdutoResponseDTO buscar(Long id) {
         Produto produto = produtoRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Produto não encontrado"));
         return toResponse(produto);
     }
 
-    // -----------------------------
-    // CRIAR PRODUTO
-    // -----------------------------
-    public ProdutoResponseDTO criar(ProdutoCreateDTO dto) {
-
+    public ProdutoResponseDTO criarProduto(ProdutoCreateDTO dto, Usuario vendedorLogado) {
         Produto produto = new Produto();
 
-        produto.setNome(dto.getNome());
-        produto.setDescricao(dto.getDescricao());
-        produto.setPreco(dto.getPreco());
-        produto.setQuantidade(dto.getQuantidade());
+        produto.setNome(dto.nome());
+        produto.setDescricao(dto.descricao());
+        produto.setPreco(dto.preco());
+        produto.setQuantidade(dto.quantidade());
         produto.setAtivo(true);
+        produto.setFotos(dto.fotos());
+        produto.setVendedor(vendedorLogado);
 
-        produto.setTipo(tipoRepository.findById(dto.getTipoId())
+        produto.setTipo(tipoRepository.findById(dto.tipoId())
                 .orElseThrow(() -> new RuntimeException("Tipo não encontrado")));
 
-        List<Cor> cores = corRepository.findAllById(dto.getCoresIds());
+        List<Cor> cores = corRepository.findAllById(dto.coresIds());
         produto.setCores(cores);
 
-        List<Tag> tags = tagRepository.findAllById(dto.getTagsIds());
+        List<Tag> tags = tagRepository.findAllById(dto.tagsIds());
         produto.setTags(tags);
 
         produtoRepository.save(produto);
@@ -76,41 +69,31 @@ public class ProdutoService {
         return toResponse(produto);
     }
 
-    // -----------------------------
-    // ATUALIZAR PRODUTO
-    // -----------------------------
     public ProdutoResponseDTO atualizar(Long id, ProdutoCreateDTO dto) {
-
         Produto produto = produtoRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Produto não encontrado"));
 
-        produto.setNome(dto.getNome());
-        produto.setDescricao(dto.getDescricao());
-        produto.setPreco(dto.getPreco());
-        produto.setQuantidade(dto.getQuantidade());
+        produto.setNome(dto.nome());
+        produto.setDescricao(dto.descricao());
+        produto.setPreco(dto.preco());
+        produto.setQuantidade(dto.quantidade());
+        produto.setFotos(dto.fotos());
 
-        produto.setTipo(tipoRepository.findById(dto.getTipoId())
+        produto.setTipo(tipoRepository.findById(dto.tipoId())
                 .orElseThrow(() -> new RuntimeException("Tipo não encontrado")));
 
-        produto.setCores(corRepository.findAllById(dto.getCoresIds()));
-
-        produto.setTags(tagRepository.findAllById(dto.getTagsIds()));
+        produto.setCores(corRepository.findAllById(dto.coresIds()));
+        produto.setTags(tagRepository.findAllById(dto.tagsIds()));
 
         produtoRepository.save(produto);
 
         return toResponse(produto);
     }
 
-    // -----------------------------
-    // DELETAR / DESATIVAR PRODUTO
-    // -----------------------------
     public void deletar(Long id) {
         produtoRepository.deleteById(id);
     }
 
-    // -----------------------------
-    // LISTAR POR TIPO
-    // -----------------------------
     public List<ProdutoResponseDTO> listarPorTipo(Long tipoId) {
         return produtoRepository.findByTipoId(tipoId)
                 .stream()
@@ -118,9 +101,6 @@ public class ProdutoService {
                 .toList();
     }
 
-    // -----------------------------
-    // LISTAR POR TAG
-    // -----------------------------
     public List<ProdutoResponseDTO> listarPorTag(Long tagId) {
         return produtoRepository.findByTagId(tagId)
                 .stream()
@@ -128,9 +108,13 @@ public class ProdutoService {
                 .toList();
     }
 
-    // -----------------------------
-    // CONVERTER PARA DTO DE RESPOSTA
-    // -----------------------------
+    public List<ProdutoResponseDTO> listarDoacoes() {
+        return produtoRepository.findByPreco(0.0)
+                .stream()
+                .map(this::toResponse)
+                .toList();
+    }
+
     private ProdutoResponseDTO toResponse(Produto p) {
         ProdutoResponseDTO dto = new ProdutoResponseDTO();
 
@@ -140,19 +124,36 @@ public class ProdutoService {
         dto.setPreco(p.getPreco());
         dto.setQuantidade(p.getQuantidade());
         dto.setAtivo(p.isAtivo());
-        dto.setFotos(p.getFotos());
+        
+        if (p.getFotos() != null && !p.getFotos().isEmpty()) {
+            dto.setFotos(p.getFotos().get(0));
+        }
+        
         dto.setOpcoes(p.getOpcoes());
         dto.setCriadoEm(p.getCriadoEm());
         dto.setAtualizadoEm(p.getAtualizadoEm());
 
-        dto.setTipoId(p.getTipo().getId());
-        dto.setTipoNome(p.getTipo().getNome());
+        if (p.getTipo() != null) {
+            dto.setTipoId(p.getTipo().getId());
+            dto.setTipoNome(p.getTipo().getNome());
+        }
 
-        dto.setCoresIds(p.getCores().stream().map(c -> c.getId()).toList());
-        dto.setCoresNomes(p.getCores().stream().map(c -> c.getNome()).toList());
+        if (p.getCores() != null) {
+            dto.setCoresIds(p.getCores().stream().map(Cor::getId).toList());
+            dto.setCoresNomes(p.getCores().stream().map(Cor::getNome).toList());
+        }
 
-        dto.setTagsIds(p.getTags().stream().map(t -> t.getId()).toList());
-        dto.setTagsNomes(p.getTags().stream().map(t -> t.getNome()).toList());
+        if (p.getTags() != null) {
+            dto.setTagsIds(p.getTags().stream().map(Tag::getId).toList());
+            dto.setTagsNomes(p.getTags().stream().map(Tag::getNome).toList());
+        }
+
+        if (p.getVendedor() != null) {
+            dto.setVendedorId(p.getVendedor().getId());
+            dto.setVendedorNome(p.getVendedor().getNome());
+            dto.setVendedorTelefone(p.getVendedor().getTelefone());
+            dto.setVendedorCidade(p.getVendedor().getCidade());
+        }
 
         return dto;
     }
