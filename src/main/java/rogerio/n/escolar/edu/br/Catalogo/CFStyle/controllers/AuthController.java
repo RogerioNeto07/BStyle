@@ -23,13 +23,19 @@ public class AuthController {
         if (repository.findByLogin(dados.login()).isPresent()) {
             return ResponseEntity.badRequest().body("Erro: Usuário já cadastrado!");
         }
+        
         Usuario novoUsuario = new Usuario();
         novoUsuario.setLogin(dados.login());
-        
         novoUsuario.setSenha(encoder.encode(dados.senha()));
+        novoUsuario.setNome(dados.nome());
+        novoUsuario.setTelefone(dados.telefone());
+        novoUsuario.setCidade(dados.cidade());
+        novoUsuario.setEstado(dados.estado());
+        novoUsuario.setRua(dados.rua());
+        novoUsuario.setNumero(dados.numero());
         
         repository.save(novoUsuario);
         
-        return ResponseEntity.ok("Usuário vendedora cadastrado com sucesso!");
+        return ResponseEntity.ok("Usuário cadastrado com sucesso!");
     }
 }

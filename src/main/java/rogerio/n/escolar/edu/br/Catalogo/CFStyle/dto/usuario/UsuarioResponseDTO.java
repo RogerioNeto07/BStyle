@@ -1,12 +1,10 @@
 package rogerio.n.escolar.edu.br.Catalogo.CFStyle.dto.usuario;
 
-public record UsuarioDTO(
+public record UsuarioResponseDTO(
+    Long id,
     String login,
-    String senha,
     String nome,
     String telefone,
     String cidade,
-    String estado,
-    String rua,
-    String numero
+    String estado
 ) {}

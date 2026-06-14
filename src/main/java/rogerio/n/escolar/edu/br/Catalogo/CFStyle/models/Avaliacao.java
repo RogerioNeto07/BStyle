@@ -14,26 +14,29 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "denuncia")
-public class Denuncia {
+@Table(name = "avaliacao")
+public class Avaliacao {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "denunciante_id", nullable = false)
-    private Usuario denunciante;
+    @JoinColumn(name = "vendedor_id", nullable = false)
+    private Usuario vendedor;
 
     @ManyToOne
-    @JoinColumn(name = "vendedor_denunciado_id", nullable = false)
-    private Usuario vendedorDenunciado;
+    @JoinColumn(name = "comprador_id", nullable = false)
+    private Usuario comprador;
 
     @Column(nullable = false)
-    private String motivo;
+    private int nota;
 
     @Column(nullable = false)
-    private String descricao;
+    private String comentario;
+
+    @Column(name = "foto_comprovante_url", nullable = false)
+    private String fotoComprovanteUrl;
 
     @Column(name = "criada_em")
     private LocalDateTime criadaEm;
