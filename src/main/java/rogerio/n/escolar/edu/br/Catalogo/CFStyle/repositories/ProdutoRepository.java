@@ -17,4 +17,6 @@ public interface ProdutoRepository extends JpaRepository<Produto, Long> {
     List<Produto> findByTagId(@Param("tagId") Long tagId);
 
     List<Produto> findByPreco(Double preco);
+
+    List<Produto> findByVendedorId(Long vendedorId);
 }

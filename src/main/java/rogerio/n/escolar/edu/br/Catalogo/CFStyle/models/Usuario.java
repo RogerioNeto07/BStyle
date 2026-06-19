@@ -32,6 +32,7 @@ public class Usuario implements UserDetails {
     private String estado;
     private String rua;
     private String numero;
+    private String fotoPerfilUrl;
 
     public Long getId() { return id; }
     
@@ -58,6 +59,9 @@ public class Usuario implements UserDetails {
 
     public String getNumero() { return numero; }
     public void setNumero(String numero) { this.numero = numero; }
+
+    public String getFotoPerfilUrl() { return fotoPerfilUrl; }
+    public void setFotoPerfilUrl(String fotoPerfilUrl) { this.fotoPerfilUrl = fotoPerfilUrl; }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

@@ -1,9 +1,12 @@
 package rogerio.n.escolar.edu.br.Catalogo.CFStyle.services;
 
 import java.util.List;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import rogerio.n.escolar.edu.br.Catalogo.CFStyle.dto.produto.ProdutoCreateDTO;
 import rogerio.n.escolar.edu.br.Catalogo.CFStyle.dto.produto.ProdutoResponseDTO;
@@ -38,6 +41,13 @@ public class ProdutoService {
                 .toList();
     }
 
+    public List<ProdutoResponseDTO> listarMeusProdutos(Usuario vendedorLogado) {
+        return produtoRepository.findByVendedorId(vendedorLogado.getId())
+                .stream()
+                .map(this::toResponse)
+                .toList();
+    }
+
     public ProdutoResponseDTO buscar(Long id) {
         Produto produto = produtoRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Produto não encontrado"));
@@ -52,16 +62,24 @@ public class ProdutoService {
         produto.setPreco(dto.preco());
         produto.setQuantidade(dto.quantidade());
         produto.setAtivo(true);
-        produto.setFotos(dto.fotos());
         produto.setVendedor(vendedorLogado);
+
+        if (dto.fotos() != null) {
+            List<String> nomesFotos = dto.fotos().stream()
+                    .map(MultipartFile::getOriginalFilename)
+                    .toList();
+            produto.setFotos(nomesFotos);
+        }
 
         produto.setTipo(tipoRepository.findById(dto.tipoId())
                 .orElseThrow(() -> new RuntimeException("Tipo não encontrado")));
 
-        List<Cor> cores = corRepository.findAllById(dto.coresIds());
+        List<Long> coresLongIds = converterStringListParaLong(dto.coresIds());
+        List<Cor> cores = corRepository.findAllById(coresLongIds);
         produto.setCores(cores);
 
-        List<Tag> tags = tagRepository.findAllById(dto.tagsIds());
+        List<Long> tagsLongIds = converterStringListParaLong(dto.tagsIds());
+        List<Tag> tags = tagRepository.findAllById(tagsLongIds);
         produto.setTags(tags);
 
         produtoRepository.save(produto);
@@ -69,28 +87,48 @@ public class ProdutoService {
         return toResponse(produto);
     }
 
-    public ProdutoResponseDTO atualizar(Long id, ProdutoCreateDTO dto) {
+    public ProdutoResponseDTO atualizar(Long id, ProdutoCreateDTO dto, Usuario vendedorLogado) {
         Produto produto = produtoRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Produto não encontrado"));
+
+        if (!produto.getVendedor().getId().equals(vendedorLogado.getId())) {
+            throw new RuntimeException("Acesso negado: Você não é o dono deste produto para editá-lo!");
+        }
 
         produto.setNome(dto.nome());
         produto.setDescricao(dto.descricao());
         produto.setPreco(dto.preco());
         produto.setQuantidade(dto.quantidade());
-        produto.setFotos(dto.fotos());
+
+        if (dto.fotos() != null) {
+            List<String> nomesFotos = dto.fotos().stream()
+                    .map(MultipartFile::getOriginalFilename)
+                    .toList();
+            produto.setFotos(nomesFotos);
+        }
 
         produto.setTipo(tipoRepository.findById(dto.tipoId())
                 .orElseThrow(() -> new RuntimeException("Tipo não encontrado")));
 
-        produto.setCores(corRepository.findAllById(dto.coresIds()));
-        produto.setTags(tagRepository.findAllById(dto.tagsIds()));
+        List<Long> coresLongIds = converterStringListParaLong(dto.coresIds());
+        produto.setCores(corRepository.findAllById(coresLongIds));
+
+        List<Long> tagsLongIds = converterStringListParaLong(dto.tagsIds());
+        produto.setTags(tagRepository.findAllById(tagsLongIds));
 
         produtoRepository.save(produto);
 
         return toResponse(produto);
     }
 
-    public void deletar(Long id) {
+    public void deletar(Long id, Usuario vendedorLogado) {
+        Produto produto = produtoRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Produto não encontrado"));
+
+        if (!produto.getVendedor().getId().equals(vendedorLogado.getId())) {
+            throw new RuntimeException("Acesso negado: Você não é o dono deste produto para excluí-lo!");
+        }
+
         produtoRepository.deleteById(id);
     }
 
@@ -112,6 +150,17 @@ public class ProdutoService {
         return produtoRepository.findByPreco(0.0)
                 .stream()
                 .map(this::toResponse)
+                .toList();
+    }
+
+    private List<Long> converterStringListParaLong(String stringOriginal) {
+        if (stringOriginal == null || stringOriginal.trim().isEmpty()) {
+            return new ArrayList<>();
+        }
+        return Arrays.stream(stringOriginal.split(","))
+                .map(String::trim)
+                .filter(s -> !s.isEmpty())
+                .map(Long::parseLong)
                 .toList();
     }
 

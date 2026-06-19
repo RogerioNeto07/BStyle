@@ -1,13 +1,15 @@
 package rogerio.n.escolar.edu.br.Catalogo.CFStyle.dto.produto;
+
 import java.util.List;
+import org.springframework.web.multipart.MultipartFile;
 
 public record ProdutoCreateDTO(
     String nome,
     String descricao,
     Double preco,
-    int quantidade,
+    Integer quantidade,
     Long tipoId,
-    List<Long> coresIds,
-    List<Long> tagsIds,
-    List<String> fotos
+    String coresIds,
+    String tagsIds,
+    List<MultipartFile> fotos
 ) {}

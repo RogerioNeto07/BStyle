@@ -6,5 +6,8 @@ public record UsuarioResponseDTO(
     String nome,
     String telefone,
     String cidade,
-    String estado
+    String estado,
+    String rua,
+    String numero,  
+    String fotoPerfilUrl
 ) {}
