@@ -1,5 +1,10 @@
 package rogerio.n.escolar.edu.br.Catalogo.CFStyle.services;
 
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -64,10 +69,24 @@ public class ProdutoService {
         produto.setAtivo(true);
         produto.setVendedor(vendedorLogado);
 
-        if (dto.fotos() != null) {
-            List<String> nomesFotos = dto.fotos().stream()
-                    .map(MultipartFile::getOriginalFilename)
-                    .toList();
+        if (dto.fotos() != null && !dto.fotos().isEmpty()) {
+            List<String> nomesFotos = new ArrayList<>();
+            try {
+                File diretorio = new File("uploads");
+                if (!diretorio.exists()) {
+                    diretorio.mkdirs();
+                }
+                for (MultipartFile foto : dto.fotos()) {
+                    if (!foto.isEmpty()) {
+                        String nomeArquivo = foto.getOriginalFilename();
+                        Path caminhoDestino = Paths.get("uploads").resolve(nomeArquivo);
+                        Files.copy(foto.getInputStream(), caminhoDestino, StandardCopyOption.REPLACE_EXISTING);
+                        nomesFotos.add(nomeArquivo);
+                    }
+                }
+            } catch (Exception e) {
+                System.out.println("Erro ao salvar arquivo físico: " + e.getMessage());
+            }
             produto.setFotos(nomesFotos);
         }
 
@@ -100,10 +119,24 @@ public class ProdutoService {
         produto.setPreco(dto.preco());
         produto.setQuantidade(dto.quantidade());
 
-        if (dto.fotos() != null) {
-            List<String> nomesFotos = dto.fotos().stream()
-                    .map(MultipartFile::getOriginalFilename)
-                    .toList();
+        if (dto.fotos() != null && !dto.fotos().isEmpty()) {
+            List<String> nomesFotos = new ArrayList<>();
+            try {
+                File diretorio = new File("uploads");
+                if (!diretorio.exists()) {
+                    diretorio.mkdirs();
+                }
+                for (MultipartFile foto : dto.fotos()) {
+                    if (!foto.isEmpty()) {
+                        String nomeArquivo = foto.getOriginalFilename();
+                        Path caminhoDestino = Paths.get("uploads").resolve(nomeArquivo);
+                        Files.copy(foto.getInputStream(), caminhoDestino, StandardCopyOption.REPLACE_EXISTING);
+                        nomesFotos.add(nomeArquivo);
+                    }
+                }
+            } catch (Exception e) {
+                System.out.println("Erro ao atualizar arquivo físico: " + e.getMessage());
+            }
             produto.setFotos(nomesFotos);
         }
 
