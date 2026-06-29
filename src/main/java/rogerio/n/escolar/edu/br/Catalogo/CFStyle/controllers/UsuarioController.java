@@ -29,7 +29,7 @@ public class UsuarioController {
     }
 
     @PutMapping("/perfil")
-    public ResponseEntity<String> atualizarPerfil(@RequestBody UsuarioUpdateDTO dados, Authentication authentication) {
+    public ResponseEntity<UsuarioResponseDTO> atualizarPerfil(@RequestBody UsuarioUpdateDTO dados, Authentication authentication) {
         String loginLogado = authentication.getName();
         Usuario usuario = repository.findByLogin(loginLogado)
                 .orElseThrow(() -> new RuntimeException("Usuário logado não encontrado"));
@@ -44,7 +44,19 @@ public class UsuarioController {
 
         repository.save(usuario);
 
-        return ResponseEntity.ok("Perfil atualizado com sucesso!");
+        UsuarioResponseDTO response = new UsuarioResponseDTO(
+            usuario.getId(),
+            usuario.getLogin(),
+            usuario.getNome(),
+            usuario.getTelefone(),
+            usuario.getCidade(),
+            usuario.getEstado(),
+            usuario.getRua(),
+            usuario.getNumero(),
+            usuario.getFotoPerfilUrl()
+        );
+
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/perfil")
