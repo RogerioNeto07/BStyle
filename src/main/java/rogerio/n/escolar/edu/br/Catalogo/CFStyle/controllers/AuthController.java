@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import rogerio.n.escolar.edu.br.Catalogo.CFStyle.dto.usuario.UsuarioDTO;
+import rogerio.n.escolar.edu.br.Catalogo.CFStyle.dto.usuario.UsuarioResponseDTO;
 import rogerio.n.escolar.edu.br.Catalogo.CFStyle.models.Usuario;
 import rogerio.n.escolar.edu.br.Catalogo.CFStyle.repositories.UsuarioRepository;
 
@@ -19,9 +20,9 @@ public class AuthController {
     private PasswordEncoder encoder;
 
     @PostMapping("/registrar")
-    public ResponseEntity<String> registrar(@RequestBody UsuarioDTO dados) {
+    public ResponseEntity<UsuarioResponseDTO> registrar(@RequestBody UsuarioDTO dados) {
         if (repository.findByLogin(dados.login()).isPresent()) {
-            return ResponseEntity.badRequest().body("Erro: Usuário já cadastrado!");
+            return ResponseEntity.badRequest().build();
         }
         
         Usuario novoUsuario = new Usuario();
@@ -33,9 +34,22 @@ public class AuthController {
         novoUsuario.setEstado(dados.estado());
         novoUsuario.setRua(dados.rua());
         novoUsuario.setNumero(dados.numero());
+        novoUsuario.setFotoPerfilUrl(dados.fotoPerfilUrl());
         
         repository.save(novoUsuario);
+
+        UsuarioResponseDTO response = new UsuarioResponseDTO(
+            novoUsuario.getId(),
+            novoUsuario.getLogin(),
+            novoUsuario.getNome(),
+            novoUsuario.getTelefone(),
+            novoUsuario.getCidade(),
+            novoUsuario.getEstado(),
+            novoUsuario.getRua(),
+            novoUsuario.getNumero(),
+            novoUsuario.getFotoPerfilUrl()
+        );
         
-        return ResponseEntity.ok("Usuário cadastrado com sucesso!");
+        return ResponseEntity.ok(response);
     }
 }
