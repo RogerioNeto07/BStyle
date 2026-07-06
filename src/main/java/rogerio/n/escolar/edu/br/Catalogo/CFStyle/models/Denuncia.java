@@ -10,9 +10,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
-import lombok.Data;
 
-@Data
 @Entity
 @Table(name = "denuncia")
 public class Denuncia {
@@ -41,5 +39,65 @@ public class Denuncia {
     @PrePersist
     public void onCreate() {
         criadaEm = LocalDateTime.now();
+    }
+
+    public Denuncia() {
+    }
+
+    public Denuncia(Long id, Usuario denunciante, Usuario vendedorDenunciado, String motivo, String descricao, LocalDateTime criadaEm) {
+        this.id = id;
+        this.denunciante = denunciante;
+        this.vendedorDenunciado = vendedorDenunciado;
+        this.motivo = motivo;
+        this.descricao = descricao;
+        this.criadaEm = criadaEm;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Usuario getDenunciante() {
+        return denunciante;
+    }
+
+    public void setDenunciante(Usuario denunciante) {
+        this.denunciante = denunciante;
+    }
+
+    public Usuario getVendedorDenunciado() {
+        return vendedorDenunciado;
+    }
+
+    public void setVendedorDenunciado(Usuario vendedorDenunciado) {
+        this.vendedorDenunciado = vendedorDenunciado;
+    }
+
+    public String getMotivo() {
+        return motivo;
+    }
+
+    public void setMotivo(String motivo) {
+        this.motivo = motivo;
+    }
+
+    public String getDescricao() {
+        return descricao;
+    }
+
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
+    }
+
+    public LocalDateTime getCriadaEm() {
+        return criadaEm;
+    }
+
+    public void setCriadaEm(LocalDateTime criadaEm) {
+        this.criadaEm = criadaEm;
     }
 }

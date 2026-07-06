@@ -1,19 +1,19 @@
-package rogerio.n.escolar.edu.br.Catalogo.CFStyle.dto.venda;
+// package rogerio.n.escolar.edu.br.Catalogo.CFStyle.dto.venda;
 
-import java.util.List;
-import jakarta.validation.constraints.NotNull;
-import lombok.Data;
+// import java.util.List;
+// import jakarta.validation.constraints.NotNull;
+// import lombok.Data;
 
-@Data
-public class VendaCreateDTO {
+// @Data
+// public class VendaCreateDTO {
 
-    @NotNull
-    private long usuarioId;
+//     @NotNull
+//     private long usuarioId;
 
-    private String clienteNome;
-    private String clienteContato;
+//     private String clienteNome;
+//     private String clienteContato;
 
-    @NotNull
-    private List<VendaItemResponseDTO> itens;
+//     @NotNull
+//     private List<VendaItemResponseDTO> itens;
 
-}
+// }
