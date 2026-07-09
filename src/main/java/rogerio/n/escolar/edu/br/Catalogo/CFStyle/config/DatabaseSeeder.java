@@ -54,7 +54,39 @@ public class DatabaseSeeder implements CommandLineRunner {
             Cor azul = new Cor();
             azul.setNome("Azul");
             corRepository.save(azul);
-            
+
+            Cor branco = new Cor();
+            branco.setNome("Branco");
+            corRepository.save(branco);
+
+            Cor vermelho = new Cor();
+            vermelho.setNome("Vermelho");
+            corRepository.save(vermelho);
+
+            Cor verde = new Cor();
+            verde.setNome("Verde");
+            corRepository.save(verde);
+
+            Cor amarelo = new Cor();
+            amarelo.setNome("Amarelo");
+            corRepository.save(amarelo);
+
+            Cor laranja = new Cor();
+            laranja.setNome("Laranja");
+            corRepository.save(laranja);
+
+            Cor roxo = new Cor();
+            roxo.setNome("Roxo");
+            corRepository.save(roxo);
+
+            Cor cinza = new Cor();
+            cinza.setNome("Cinza");
+            corRepository.save(cinza);
+
+            Cor marrom = new Cor();
+            marrom.setNome("Marrom");
+            corRepository.save(marrom);
+
             System.out.println("--> Seed: Cores cadastradas!");
         }
 
