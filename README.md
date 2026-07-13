@@ -1,16 +1,11 @@
-# Catalogo-CF-Style
+# BStyle
 
 ## Descrição:
-O sistema consiste em um catálogo virtual para a loja CF Style, localizada em Umarizal - RN. O sistema permitirá que as vencedoras cadastrem os produtos e que os clientes acessem a plataforma para ver os produtos disponíveis.
-
-## Justificativa:
-O projeto foi pensado para suprir duas necessidades da CF Style:
-- Centralizar as informações de controle e armazenamento de produtos para trazer mais organização e agilidade.
-- Entregar ao cliente um catálogo mais acessível e organizado complementando as redes sociais e tornando a apresentação dos produtos mais eficiente.
-
+O sistema consiste em um catálogo virtual para um brechó online. O sistema permite que os usuários cadastrem seus produtos e que os clientes acessem a plataforma para ver os produtos disponíveis.
 
 ## Modelo Lógico:
-<img width="1404" height="1109" alt="Modelo Lógico - CFStyle (1)" src="https://github.com/user-attachments/assets/b7c54762-9c9d-41ef-803c-232b2e53b4e2" />
+<img width="954" height="840" alt="BStyleModeloLógico" src="https://github.com/user-attachments/assets/78d55290-7540-4bbd-87b9-5ce1c7d634d4" />
+" />
 
 ## Endpoints:
 API disponível em: http://localhost:8080
@@ -25,14 +20,6 @@ API disponível em: http://localhost:8080
 | `DELETE` | `/produtos/:id`           | Remove (ou desativa) um produto                      |
 | `GET`    | `/produtos/tipo/:tipo_id` | Lista produtos por tipo                              |
 | `GET`    | `/produtos/tag/:tag_id`   | Lista produtos por tag                               |
-
-### Vendas:
-| Método | Endpoint                       | Descrição                            |
-| ------ | ------------------------------ | ------------------------------------ |
-| `GET`  | `/vendas`                      | Lista todas as vendas                |
-| `GET`  | `/vendas/:id`                  | Detalhes da venda      |
-| `POST` | `/vendas`                      | Cria uma venda com lista de produtos |
-| `GET`  | `/faturamento?periodo=2025-11` | Faturamento total por período        |
 
 ### Busca/Exibição:
 | Método | Endpoint                  | Descrição                                   |
@@ -68,21 +55,17 @@ API disponível em: http://localhost:8080
 | `PUT`    | `/cores/:id` | Atualiza nome da cor            |
 | `DELETE` | `/cores/:id` | Exclui uma cor                   |
 
-### Vendas:
-| Método   | Endpoint      | Descrição                                       |
-| -------- | ------------- | ----------------------------------------------- |
-| `GET`    | `/vendas`     | Lista todas as vendas realizadas                |
-| `GET`    | `/vendas/:id` | Detalhes de uma venda   |
-| `POST`   | `/vendas`     | Registra uma nova venda  |
-| `PUT`    | `/vendas/:id` | Atualiza dados da venda          |
-| `DELETE` | `/vendas/:id` | Cancela uma venda                     |
+### Avaliações:
+| Método   | Endpoint     | Descrição                        |
+| -------- | ------------ | -------------------------------- |
+| `GET`    | `/avaliacoes`     | Lista todas as avaliacoes |
+| `POST`   | `/avaliacoes`     | Cria uma avaliacao          |
 
-### Faturamento:
-| Método | Endpoint                       | Descrição                                                                   |
-| ------ | ------------------------------ | --------------------------------------------------------------------------- |
-| `GET`  | `/faturamento`                 | Retorna faturamento total da vendedora           |
-| `GET`  | `/faturamento?periodo=2025-11` | Retorna faturamento filtrado por mês/ano                                    |
-| `GET`  | `/faturamento/detalhado`       | Faturamento diário ou por tipo de produto  |
+### Denúncias:
+| Método   | Endpoint     | Descrição                        |
+| -------- | ------------ | -------------------------------- |
+| `GET`    | `/denuncias`     | Lista todas as denuncias |
+| `POST`   | `/denuncias`     | Cria uma denuncia          |
 
 ## Executando com Docker
 Certifique-se de ter Docker e Docker Compose instalados.
